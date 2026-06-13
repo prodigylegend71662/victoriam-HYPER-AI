@@ -3,22 +3,61 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Victoriam Hyper AI </title>
+    <title>Victoriam Hyper AI</title>
     <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
-    <div class="app">
-      <header class="header">
-        <div class="brand">Victoriam Hyper AI</div>
-      </header>
-      <main class="chat-container">
-        <ul id="messages" class="messages"></ul>
+    <div class="interface">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div>
+            <div class="brand">Victoriam Hyper AI</div>
+            <p class="sidebar-subtitle">Research chat with persistent memory</p>
+          </div>
+          <button id="toggleSidebar" class="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+        </div>
+
+        <div class="sidebar-actions">
+          <button id="newChatBtn" class="primary-button">➕ New Chat</button>
+        </div>
+
+        <div class="chat-list" id="chatList"></div>
+
+        <div class="sidebar-footer">
+          <div class="footer-group">
+            <span class="footer-label">Settings</span>
+            <button id="themeToggleBtn" class="secondary-button">🌙 Dark Mode</button>
+          </div>
+          <div class="footer-group">
+            <span class="footer-label">Extended research</span>
+            <button id="extendedModeBtn" class="secondary-button">Off</button>
+          </div>
+          <div class="footer-info">Your chat history is stored locally in the browser.</div>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <div class="topbar">
+          <div>
+            <div class="session-title" id="sessionTitle">New Chat</div>
+            <div class="session-meta" id="sessionMeta">Victoriam Hyper AI • Neutral factual style</div>
+          </div>
+        </div>
+
+        <section class="chat-panel">
+          <ul id="messages" class="messages"></ul>
+          <div class="empty-state" id="emptyState">Start a new conversation or select a saved chat.</div>
+        </section>
+
+        <footer class="composer">
+          <textarea id="queryInput" placeholder="Ask a question, request a summary, or start research..." rows="2"></textarea>
+          <button id="submitBtn" class="primary-button">Send</button>
+        </footer>
       </main>
-      <footer class="composer">
-        <textarea id="queryInput" placeholder="Please enter your query" rows="2"></textarea>
-        <button id="submitBtn">Send</button>
-      </footer>
     </div>
+
+    <div class="overlay" id="sidebarOverlay"></div>
+
     <script src="/static/script.js"></script>
   </body>
 </html>

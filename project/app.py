@@ -8,14 +8,18 @@ if ROOT not in sys.path:
     sys.path.append(ROOT)
 
 # Try to import victoriam_hyper_ai pipeline
-PACKAGE_DIR = os.path.join(ROOT, 'victoriam_hyper_ai')
-if PACKAGE_DIR not in sys.path:
-    sys.path.insert(0, PACKAGE_DIR)
 try:
     import importlib
-    vh_main = importlib.import_module('main')
+    vh_main = importlib.import_module('victoriam_hyper_ai.main')
 except Exception:
     vh_main = None
+
+SYSTEM_IDENTITY = {
+    "name": "Victoriam Hyper AI",
+    "type": "Structured research and article-generation engine",
+    "purpose": "Convert user queries into clean, encyclopedia-style responses",
+    "style": "Neutral, factual, structured paragraphs",
+}
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
@@ -26,28 +30,32 @@ def fallback_response(text: str) -> str:
     return f"{token.capitalize()} is a topic with notable aspects; specific details require a focused query. Please ask about a particular aspect or include clarifying parentheses for disambiguation."
 
 
-def generate_response(text: str) -> str:
+def generate_response(text: str, system: dict | None = None) -> tuple[str, str, dict]:
     """Generate a response using victoriam_hyper_ai if available, otherwise use fallback logic.
 
-    The local `victoriam_hyper_ai.run(query)` returns a dict with an `answer` string.
+    The local `victoriam_hyper_ai.run(query, system=...)` returns a dict with an `answer` string.
     """
     if not text or not isinstance(text, str):
-        return "No sufficiently relevant information could be found for this query."
+        return "No sufficiently relevant information could be found for this query.", "other", system or SYSTEM_IDENTITY
 
     if vh_main is None:
-        return fallback_response(text)
+        return fallback_response(text), "other", system or SYSTEM_IDENTITY
 
     try:
-        result = vh_main.run(text)
+        try:
+            result = vh_main.run(text, system=system)
+        except TypeError:
+            result = vh_main.run(text)
+
         if isinstance(result, dict):
-            # prefer 'answer' then 'structured_answer' then 'summary'
             answer = result.get("answer") or result.get("structured_answer") or result.get("summary")
+            route = result.get("route", "research")
+            returned_system = result.get("system", system or SYSTEM_IDENTITY)
             if answer:
-                return answer
-        # if unexpected result, fall back
-        return fallback_response(text)
+                return answer, route, returned_system
+        return fallback_response(text), "other", system or SYSTEM_IDENTITY
     except Exception:
-        return fallback_response(text)
+        return fallback_response(text), "other", system or SYSTEM_IDENTITY
 
 
 @app.route("/")
@@ -59,8 +67,9 @@ def index():
 def api_query():
     data = request.get_json(force=True, silent=True) or {}
     text = data.get("text", "")
-    response = generate_response(text)
-    return jsonify({"result": response})
+    system = data.get("system") or SYSTEM_IDENTITY
+    response, route, returned_system = generate_response(text, system=system)
+    return jsonify({"result": response, "route": route, "system": returned_system})
 
 
 if __name__ == "__main__":

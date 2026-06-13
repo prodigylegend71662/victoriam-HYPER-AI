@@ -12,10 +12,13 @@ from victoriam_hyper_ai.source_layer import collect_sources
 from victoriam_hyper_ai.structure_layer import build_paragraph_answer
 
 
-def run(query: str, include_youtube: bool = False) -> Dict[str, Any]:
+def run(query: str, include_youtube: bool = False, system: dict | None = None) -> Dict[str, Any]:
     route = route_query(query)
     if route == "math":
-        return {"query": query, "answer": evaluate_math(query), "route": "math"}
+        return {"query": query, "answer": evaluate_math(query), "route": "math", "system": system}
+
+    if system and system.get("extendedResearch"):
+        include_youtube = True
 
     documents = collect_sources(query, include_youtube=include_youtube)
     facts = extract_facts(documents, query)
@@ -23,6 +26,8 @@ def run(query: str, include_youtube: bool = False) -> Dict[str, Any]:
     structured_answer = build_paragraph_answer(clusters, query)
     output = format_output(query=query, clusters=clusters, facts=facts, documents=documents, structured_answer=structured_answer)
     output["route"] = "research"
+    output["system"] = system
+    output["extendedResearch"] = bool(system and system.get("extendedResearch"))
     return output
 
 
