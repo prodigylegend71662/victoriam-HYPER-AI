@@ -4,9 +4,9 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Set
 
-from cleaning_layer import split_sentences, clean_text
-from scoring_layer import extract_entities_from_text, score_fact
-from source_layer import SourceDocument
+from victoriam_hyper_ai.cleaning_layer import split_sentences, clean_text
+from victoriam_hyper_ai.scoring_layer import extract_entities_from_text, score_fact
+from victoriam_hyper_ai.source_layer import SourceDocument
 
 def sentence_matches_query(sentence: str, query_tokens: Set[str], query_entities: Set[str]) -> bool:
     sentence_tokens = set(sentence.lower().split())

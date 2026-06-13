@@ -8,7 +8,7 @@ from urllib.parse import quote
 
 import requests
 
-from cleaning_layer import clean_text
+from victoriam_hyper_ai.cleaning_layer import clean_text
 
 SOURCE_TIERS = {
     "wikipedia": 1,

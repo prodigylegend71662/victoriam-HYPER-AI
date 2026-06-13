@@ -3,9 +3,9 @@
 
 from typing import Any, Dict, List
 
-from clustering_layer import ClusterRecord
-from fact_layer import FactRecord
-from source_layer import SourceDocument
+from victoriam_hyper_ai.clustering_layer import ClusterRecord
+from victoriam_hyper_ai.fact_layer import FactRecord
+from victoriam_hyper_ai.source_layer import SourceDocument
 
 
 def build_source_summary(documents: List[SourceDocument]) -> List[Dict[str, Any]]:

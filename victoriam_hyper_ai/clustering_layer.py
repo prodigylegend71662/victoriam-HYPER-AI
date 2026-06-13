@@ -4,7 +4,7 @@
 from dataclasses import dataclass, field
 from typing import Dict, List
 
-from fact_layer import FactRecord
+from victoriam_hyper_ai.fact_layer import FactRecord
 
 CATEGORY_KEYWORDS = {
     "Politics": ["government", "political", "election", "policy", "state", "president", "minister", "law", "parliament"],

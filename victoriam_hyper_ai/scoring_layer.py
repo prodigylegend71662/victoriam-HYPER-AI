@@ -4,7 +4,7 @@
 import re
 from typing import List, Set
 
-from source_layer import TIER_WEIGHTS
+from victoriam_hyper_ai.source_layer import TIER_WEIGHTS
 
 
 def tokenize(text: str) -> List[str]:

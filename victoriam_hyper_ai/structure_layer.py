@@ -5,7 +5,7 @@ import re
 from dataclasses import dataclass
 from typing import List, Set
 
-from clustering_layer import ClusterRecord
+from victoriam_hyper_ai.clustering_layer import ClusterRecord
 
 QUESTION_WORDS = ["what", "who", "when", "where", "why", "how", "does", "do", "is", "are", "was", "were"]
 STOPWORDS = {
